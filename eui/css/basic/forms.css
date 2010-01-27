@@ -1,0 +1,78 @@
+/**
+ * FORM BASE STYLES
+ * -------------------------------------------------------------------- */
+form .input-wrap {
+	clear: both;
+	padding: 0px;
+	margin: 0px 0px 10px 0px;
+	line-height: normal;
+}
+.label_1 label, .label_1 dl dt { width: 60px;  } .label_1 dl.vert dd { margin-left: 60px;  }
+.label_2 label, .label_2 dl dt { width: 120px; } .label_2 dl.vert dd { margin-left: 120px; }
+.label_3 label, .label_3 dl dt { width: 180px; } .label_3 dl.vert dd { margin-left: 180px; }
+.label_4 label, .label_4 dl dt { width: 240px; } .label_4 dl.vert dd { margin-left: 240px; }
+.label_5 label, .label_5 dl dt { width: 300px; } .label_5 dl.vert dd { margin-left: 300px; }
+.label_6 label, .label_6 dl dt { width: 360px; } .label_6 dl.vert dd { margin-left: 360px; }
+.label_7 label, .label_7 dl dt { width: 420px; } .label_7 dl.vert dd { margin-left: 420px; }
+.label_8 label, .label_8 dl dt { width: 480px; } .label_8 dl.vert dd { margin-left: 480px; }
+
+input.text-desc, input[type=text], input[type=password], textarea {
+	font-size: 14px;
+	width: 270px;
+	font-family: Helvetica, Arial, sans-serif;
+	border: 1px solid #333;
+	background: #ddd;
+	margin: 0px;
+	padding: 4px;
+}
+input.text-desc {
+	color: #898989;
+}
+textarea {
+	width: 278px;
+	height: 100px;
+	padding: 0px;
+}
+label, form dt {
+	color: #000;
+	font-size: 14px;
+	font-weight: normal;
+	padding-top: 4px;
+}
+label, form dl dt {
+	clear: both;
+	width: 120px;
+	display: block;
+	float: left;
+	margin: 0px;
+}
+input[type=submit], input[type=button] {
+	cursor: pointer;
+	font-size: 14px;
+	color: #333;
+	background: #999;
+	border: 1px solid #333;
+	padding: 6px 10px;
+}
+input[type=submit]:hover, input[type=button]:hover {
+	color: #fff;
+	background: #333;
+}
+
+/**
+ * DJANGO ERRORS
+ * ------------------------------------------------------------------------ */
+ul.errorlist, ul.errorlist li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+ul.errorlist {
+	margin: 0 0 10px;
+}
+ul.errorlist li {
+	color: #fff;
+	margin: 0;
+	padding: 10px;
+	background: #ff0000;
+}

@@ -1,0 +1,206 @@
+@import url('/static/css/960/reset.css');
+@import url('/static/css/960/960.css');
+@import url('/static/css/960/text.css');
+
+/**
+ * BASE TEXT
+ * ------------------------------------------------------------------------ */
+a {
+	text-decoration: none;
+	color: #333;
+}
+a:hover {
+	color: #999;
+}
+
+/**
+ * HEADER
+ * ------------------------------------------------------------------------ */
+header {
+	display: block;
+}
+header h1 {
+	font-size: 18px;
+	color: #333;
+	background: #ccc;
+	margin: 0;
+	padding: 10px;
+}
+header nav.main {
+	width: 100%;
+	float: left;
+	display: block;
+	background: #999;
+	border-top: 1px solid #333;
+	border-bottom: 1px solid #333;
+}
+header nav.main ul, header nav.main ul li {
+	position: relative;
+	display: block;
+	float: left;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+header nav.main ul li a, header nav.main ul li a:visited  {
+	position: relative;
+	float: left;
+	display: block;
+	height: 20px;
+	padding: 10px;
+	cursor: pointer;
+}
+header nav.main ul li a:hover {
+	color: #fff;
+	background: #333;
+}
+header nav.user {
+	float: right;
+	margin: -84px 0 0 0;
+	padding: 0 10px 0 0;
+}
+header nav.user ul, header nav.user ul li {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+
+/**
+ * MAIN NAV DROP DOWN MENUS
+ * ------------------------------------------------------------------------ */
+header nav.main ul li ul {
+	display:block;
+	width: 118px;
+	position: absolute;
+	top: 0px;
+	left: -10000px;
+	background: #999;
+	border: 1px solid #333;
+	border-top: none;
+}
+header nav.main ul li ul li {
+	width: 100%;
+}
+header nav.main ul li.hover ul {
+	top: 41px;
+	left: auto;
+	z-index: 1;
+}
+header nav.main ul li ul li a {
+	width: 98px;
+}
+
+/**
+ * ONE COLUMN STYLES
+ * ------------------------------------------------------------------------ */
+div.one-col {
+	padding-top: 20px;
+}
+
+
+/**
+ * CONFIRM DIALOG
+ * ------------------------------------------------------------------------ */
+#confim-dialog {
+	background-color: #fff;
+	border: 2px solid  #333;
+}
+#confim-dialog h2 {
+	font-size: 14px;
+	color: #fff;
+	background-color: #333;
+	padding: 4px;
+}
+#confim-dialog div.body, #confim-dialog div.buttons {
+	padding: 10px;
+}
+
+
+/**
+ * NOTIFICATIONS
+ * ------------------------------------------------------------------------ */
+ul.notifications, ul.notifications li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+ul.notifications {
+	width: 100%;
+	position: absolute;
+	top: 0px;
+	font-weight: bold;
+	font-size: 14px;
+	background: #000;
+	z-index: 100;
+	filter: alpha(opacity=80); /* MSIE/PC */
+	-moz-opacity: 0.8; /* Mozilla 1.6 and older */
+	opacity: 0.8;
+}
+ul.notifications li {
+	color: #fff;
+	padding: 20px;
+}
+/*h1 {
+	font-size: 16px;
+}
+h2 {
+	font-size: 14px;
+	color: #666;
+}
+a, a:visited {
+	color: #666;
+}
+a:hover {
+	color: #333;
+}
+form label {
+	float: left;
+	width: 100px;
+}
+form input.txt, textarea {
+	font-family: 13px/1.5 Helvetica,Arial,'Liberation Sans',FreeSans,sans-serif;
+	border: 1px solid #666;
+	background: #eee;
+	width: 300px;
+}
+form p {
+	margin: 0 0 1em 0;
+}
+textarea {
+	height: 100px;
+}
+input.btn, input.alt-btn {
+	color: #333;
+	border: 1px solid #666;
+	background: #eee;
+	padding: 5px 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+
+}
+input.btn:hover, input.alt-btn:hover {
+	color: #fff;
+	background: #666;
+	cursor: pointer;
+}
+ul.errorlist {
+	width: 388px;
+	clear: both;
+	padding: 6px;
+	margin: 1em 0 12px 0;
+	border: 1px solid #CC0000;
+}
+ul.errorlist li {
+	list-style: none;
+	margin: 0;
+	color:#CC0000;
+}
+div.status {
+	padding: 1em;
+	background:#FFF9D7;
+	border:1px solid #E2C822;
+	margin-bottom: 1em;
+}
+*/
