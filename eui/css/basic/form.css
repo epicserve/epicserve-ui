@@ -25,7 +25,7 @@ input.text-desc, input[type=text], input[type=password], textarea {
 	margin: 0px;
 	padding: 4px;
 }
-input.text-desc {
+.input-desc {
 	color: #898989;
 }
 textarea {
@@ -59,6 +59,7 @@ input[type=submit]:hover, input[type=button]:hover {
 	background: #333;
 }
 
+
 /**
  * DJANGO ERRORS
  * ------------------------------------------------------------------------ */
@@ -70,9 +71,13 @@ ul.errorlist, ul.errorlist li {
 ul.errorlist {
 	margin: 0 0 10px;
 }
-ul.errorlist li {
+#top-error-container, .error-msg, ul.errorlist li {
 	color: #fff;
 	margin: 0;
 	padding: 10px;
 	background: #ff0000;
+	margin: 0 0 10px 0;
+}
+#top-error-container p {
+	margin: 0;
 }

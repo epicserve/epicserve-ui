@@ -1,6 +1,6 @@
-@import url('/static/css/960/reset.css');
-@import url('/static/css/960/960.css');
-@import url('/static/css/960/text.css');
+@import url('../960/reset.css');
+@import url('../960/960.css');
+@import url('../960/text.css');
 
 /**
  * BASE TEXT

@@ -1,12 +1,39 @@
-var form_validator = function() {
+/**
+ * epicserve-ui Form Validation
+ * Copyright (c) 2010 Brent O'Connor
+ * http://www.epicserve.com/
+ * 
+ * Version: 1.2
+ *
+ * Dual licensed under the MIT and GPL licenses.
+ * 
+ * Example Usage:
+ * 
+ * 	<script src="../eui/js/jquery/jquery-1.4.min.js" type="text/javascript" charset="utf-8"></script>
+ * 	<script src="../eui/js/form/validation.js" type="text/javascript" charset="utf-8"></script>
+ * 	<script type="text/javascript" charset="utf-8">
+ * 	$(function() {
+ * 		validation.init({
+ * 			form_selector: "#demo-form",
+ * 			form_fields: [
+ * 				{ input_selector: "#name", test_type: "is_empty" },
+ * 				{ input_selector: "#email", test_type: "is_email" },
+ * 				{ input_selector: "#comment", test_type: "is_empty" }
+ * 			]
+ * 		});
+ * 	});
+ * 	</script>
+ *
+ */
+var validation = function() {
 
 	return {
-		
 		
 		defaults: {
 			error_arr: [],
 			error_display_type: 'inline',
 			inline_error_class: 'error-msg',
+			description_class: 'input-desc',
 			form_fields: [],
 			error_top_inline_msg: '<p>Please correct the errors below.</p>',
 			error_msgs_pos: 'top',
@@ -33,23 +60,23 @@ var form_validator = function() {
 			
 			$(this.o.form_selector).submit(function() {
 				
-				var o = form_validator.o;
+				var o = validation.o;
 				if (o.submit_btn !== false) {
 					$(o.submit_btn).attr("disabled", "disabled");
 					$(o.submit_btn).val("Please Wait...");
 				}
 				
-				form_validator.check_form();
+				validation.check_form();
 			
-				if (form_validator.error_arr.length === 0) {
-					if (form_validator.o.callback === false) {
-						$(form_validator.o.form_selector).unbind("submit").trigger('submit');
+				if (validation.error_arr.length === 0) {
+					if (validation.o.callback === false) {
+						$(validation.o.form_selector).unbind("submit").trigger('submit');
 					} else {
-						return form_validator.o.callback();
+						return validation.o.callback();
 					}
 				} else {
 				
-					form_validator.display_errors();
+					validation.display_errors();
 					return false;
 				
 				}
@@ -88,19 +115,19 @@ var form_validator = function() {
 		
 		is_empty_with_if_fields: function(item) {
 			
-			form_validator.is_empty_with_if_fields.result = true;
+			validation.is_empty_with_if_fields.result = true;
 			$.each(item.if_empty_fields, function(key, val) {
-				result = form_validator.is_empty($(val).val());
+				result = validation.is_empty($(val).val());
 				if (result == false) {
-					result2 = form_validator.is_empty($(item.input_selector).val());
+					result2 = validation.is_empty($(item.input_selector).val());
 					if (result2 == false) {
-						form_validator.is_empty_with_if_fields.result = false;
+						validation.is_empty_with_if_fields.result = false;
 						return false;
 					}
 					
 				}
 			});
-			return form_validator.is_empty_with_if_fields.result;
+			return validation.is_empty_with_if_fields.result;
 		},
 		
 		is_email: function(text_str) {
@@ -129,14 +156,14 @@ var form_validator = function() {
 	
 			// check password length
 			if (password.length < min_length) {
-				form_validator.settings.form_fields[index].error_msg = min_length_error_msg;
+				validation.settings.form_fields[index].error_msg = min_length_error_msg;
 				return false;
 			}
 			
 			// check for invalid characters
 			pattern   = new RegExp(invalid_chars);
 			if (pattern.test(password) == true) {
-				form_validator.settings.form_fields[index].error_msg = invalid_chars_error_msg;
+				validation.settings.form_fields[index].error_msg = invalid_chars_error_msg;
 				return false;
 			}
 			
@@ -147,7 +174,7 @@ var form_validator = function() {
 					pattern   = new RegExp(val);
 					if (pattern.test(password) === false) {
 						has_required_chars = false;
-						form_validator.settings.form_fields[index].error_msg = required_chars_error_msg;
+						validation.settings.form_fields[index].error_msg = required_chars_error_msg;
 						return false;
 					}
 				});
@@ -158,25 +185,25 @@ var form_validator = function() {
 		},
 	
 		add_alt_attr: function() {
-			form_fields = $(this.o.form_selector + " input[alt]");
-			$.each(form_fields, function(index, item) {
-				item_value = $(item).attr("value");
-				item_alt_value = $(item).attr("alt");
-				if(typeof item_value === "undefined" || item_value == "") {
-					$(item).val(item_alt_value);
-					$(item).addClass("class", "txt-desc");
+			var self = this;
+			form_fields = $(this.o.form_selector + " [alt]");
+			$.each(form_fields, function(index, elem) {
+				elem = $(elem);
+				if(elem.val() == "") {
+					elem.val(elem.attr('alt'));
+					elem.addClass("class", self.o.description_class);
 				}
 			});
 		},
 	
 		clear_alt_attr: function() {
-			form_fields = $(this.o.form_selector + " input[alt]");
-			$.each(form_fields, function(index, item) {
-				item_value = $(item).attr("value");
-				item_alt_value = $(item).attr("alt");
-				if(item_value === item_alt_value) {
-					$(item).val("");
-					$(item).removeClass("class", "txt-desc");
+			var self = this;
+			form_fields = $(this.o.form_selector + " [alt]");
+			$.each(form_fields, function(index, elem) {
+				elem = $(elem);
+				if(elem.val() === elem.attr("alt")) {
+					elem.val('');
+					elem.removeClass("class", self.o.description_class);
 				}
 			});
 		},
@@ -202,39 +229,39 @@ var form_validator = function() {
 					case "is_empty":
 						if (typeof item.if_empty_fields !== "undefined") {
 							test_found = true;
-							result = form_validator.is_empty_with_if_fields(item);
+							result = validation.is_empty_with_if_fields(item);
 						}
 					break;
 					case "is_multipe_choice_empty":
 						test_found = true;
-						result = form_validator.is_multipe_choice_empty(item);
+						result = validation.is_multipe_choice_empty(item);
 					break;
 					case "is_same":
 						test_found      = true;
 						input_id_value2 = $(item.input_selector+'-2').attr("value");
-						result          = form_validator.is_same(input_id_value, input_id_value2);
+						result          = validation.is_same(input_id_value, input_id_value2);
 					break;
 					case "is_password_valid":
 						test_found = true;
 						options    = (typeof item.options !== "undefined") ? item.options : null;
-						result     = form_validator.is_password_valid(input_id_value, index, options);
+						result     = validation.is_password_valid(input_id_value, index, options);
 					break;
 				}
 
 				// run normal tests if it wasn't a special kind of test
-				if (typeof eval("form_validator."+item.test_type) == "function" && test_found == false) {
-					result = eval("form_validator."+item.test_type+"(\""+escape(input_id_value)+"\")");
+				if (typeof eval("validation."+item.test_type) == "function" && test_found == false) {
+					result = eval("validation."+item.test_type+"(\""+escape(input_id_value)+"\")");
 				}
 				
 				if (typeof result !== "undefined" && result === false) {
 					if (typeof item.error_msg === "undefined") {
-						if (typeof form_validator.o.default_errors[item.test_type] === "undefined") {
-							item.error_msg = form_validator.o.default_errors['is_empty'];
+						if (typeof validation.o.default_errors[item.test_type] === "undefined") {
+							item.error_msg = validation.o.default_errors['is_empty'];
 						} else {
-							item.error_msg = form_validator.o.default_errors[item.test_type];
+							item.error_msg = validation.o.default_errors[item.test_type];
 						}
 					}
-					form_validator.add_error(index, item.error_msg);
+					validation.add_error(index, item.error_msg);
 				}
 
 			});
@@ -249,11 +276,12 @@ var form_validator = function() {
 			
 			// add top error message
 			if ($("#"+o.top_error_div_id).length === 0) {
-				$(o.form_selector).prepend('<div id="'+o.top_error_div_id+'">'+o.error_top_inline_msg+'</div>');
+				$(o.form_selector).prepend('<div>');
+				$(o.form_selector).find('div:first').attr('id', o.top_error_div_id).html(o.error_top_inline_msg);
 			}
 
 			// remove previous error messages
-			$('.'+form_validator.o.inline_error_class).each(function() {
+			$('.'+validation.o.inline_error_class).each(function() {
 				$(this).parent().removeClass('error');
 				$(this).remove();
 			});
@@ -278,7 +306,7 @@ var form_validator = function() {
 						var parent     = $(selector).parent();
 						var parent_tag = parent[0].tagName.toLowerCase();
 					}
-					error_msg = '<'+parent_tag+' class="'+form_validator.o.inline_error_class+'">'+field.error_msg+'</'+parent_tag+">\n";
+					error_msg = '<'+parent_tag+' class="'+validation.o.inline_error_class+'">'+field.error_msg+'</'+parent_tag+">\n";
 					if (o.error_msgs_pos === 'top') {
 						parent.before(error_msg);
 					} else {
@@ -289,8 +317,8 @@ var form_validator = function() {
 
 			});
 			
-			$('.'+form_validator.o.inline_error_class).each(function() {
-				if ($(this).next().hasClass(form_validator.o.inline_error_class)) {
+			$('.'+validation.o.inline_error_class).each(function() {
+				if ($(this).next().hasClass(validation.o.inline_error_class)) {
 					$(this).next().remove();
 				}
 			});
