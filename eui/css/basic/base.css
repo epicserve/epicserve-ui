@@ -5,6 +5,9 @@
 /**
  * BASE TEXT
  * ------------------------------------------------------------------------ */
+header, footer, section {
+	display: block;
+}
 a {
 	text-decoration: none;
 	color: #333;
@@ -13,18 +16,44 @@ a:hover {
 	color: #999;
 }
 
+
+/**
+ * STICKY FOOTER
+ * ------------------------------------------------------------------------ */
+html, body {
+	height: 100%;
+}
+#page-container {
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0 auto -29px; /* the bottom margin is the negative value of the footer's height */
+}
+footer.bottom, .push {
+	height: 29px; /* .push must be the same height as .footer */
+}
+footer.bottom .grid_12 {
+	font-size: 11px;
+	color: #666;
+	border-top: 1px solid #666;
+}
+footer.bottom p {
+	margin-bottom: 10px;
+}
+
+
 /**
  * HEADER
  * ------------------------------------------------------------------------ */
-header {
-	display: block;
-}
 header h1 {
 	font-size: 18px;
 	color: #333;
 	background: #ccc;
 	margin: 0;
 	padding: 10px;
+}
+header.master {
+	margin-bottom: 20px;
 }
 header nav.main {
 	width: 100%;

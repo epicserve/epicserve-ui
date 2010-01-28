@@ -10,44 +10,89 @@
 	<script src="../eui/js/form/descriptions.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
 	$(function() {
-		validation.init({
-			form_selector: "#demo-form",
-			form_fields: [
-				{ input_selector: "#name", test_type: "is_empty" },
-				{ input_selector: "#email", test_type: "is_email" },
-				{ input_selector: "#comment", test_type: "is_empty" }
+		$('#demo-form').validation({
+			fields: [
+				{ id: "name", test: "is_empty" },
+				{ id: "email", test: "is_email" },
+				{ id: "comment", test: "is_empty" }
 			]
 		});
-		$('input[type=text]').descriptions()
+		$('input[type=text]').descriptions();
 		$('textarea').descriptions();
 	});
 	</script>
 	<link rel="stylesheet" href="../eui/css/basic/base.css" type="text/css" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="../eui/css/basic/form.css" type="text/css" media="screen" charset="utf-8">
-</head>
+	
+	<!-- Javascript and CSS required for the code syntax highlighter -->
+	<script src="../eui/js/code/syntaxhighlighter/src/shCore.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../eui/js/code/syntaxhighlighter/scripts/shCore.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../eui/js/code/syntaxhighlighter/scripts/shBrushXml.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../eui/js/code/syntaxhighlighter/scripts/shBrushJScript.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="../eui/js/code/syntaxhighlighter/styles/shCore.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="../eui/js/code/syntaxhighlighter/styles/shThemeRDark.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script type="text/javascript">
+		SyntaxHighlighter.defaults.gutter = false;
+		SyntaxHighlighter.all();
+	</script></head>
+	<style type="text/css" media="screen">
+		.syntaxhighlighter {
+			padding: 10px !important;
+		}
+	</style>
 
-<body>
-	<div class="container_12">
+<body class="one-col">
+	<div id="page-container" class="container_12">
 	<div class="grid_12">
 
-	<header>
+	<header class="master">
 		<h1>Form Validation and Description Demo</h1>
 	</header>
 
 	<section>
+		
+		<p>To setup form validation and extra form input descriptions, you first need to attach the required scripts and stylesheets in the head of your html document.</p>
+		
+		<pre class="brush: xml">&lt;head&gt;
+...
+&lt;script src="../eui/js/jquery/jquery-1.4.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="../eui/js/form/validation.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+&lt;script src="../eui/js/form/descriptions.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+...
+&lt;/head&gt;
+</pre>
+
+		<p>Next you need to initiate and configure the validation and description scripts.</p>
+		
+		<pre class="brush: js">&lt;script type="text/javascript" charset="utf-8"&gt;
+$(function() {
+	$('#demo-form').validation({
+		fields: [
+			{ id: "name", test: "is_empty" },
+			{ id: "email", test: "is_email" },
+			{ id: "comment", test: "is_empty" }
+		]
+	});
+	$('input[type=text]').descriptions()
+	$('textarea').descriptions();
+});
+&lt;/script&gt;</pre>
+		
 		<form id="demo-form" action="javascript:alert('The form is valid and it would submit.');" method="post">
 			<div class="input-wrap"><label for="name">Name</label><input type="text" alt="First and Last Name" name="name" id="name" value="" /></div>
 			<div class="input-wrap"><label for="email">Email</label><input type="text" alt="name@example.com" name="email" id="email" value="" /></div>
 			<div class="input-wrap"><label for="comment">Comment</label><textarea alt="Enter your comment here..." name="comment" id="comment"></textarea></div>
-			<div class="input-wrap"><label>&nbsp;</label><input type="submit" value="Submit" />
+			<div class="input-wrap"><label>&nbsp;</label><input type="submit" value="Submit" /></div>
 		</form>
 	</section>
-
-	<footer>
-		<p>Copyright 2010 Brent O'Connor</p>
+	</div>
+	<div class="push"></div>
+	</div>
+	
+	<footer class="bottom container_12">
+		<div class="grid_12"><p class="">Copyright 2010 Brent O'Connor</p></div>
 	</footer>
 
-	</div>
-	</div>
+	
 </body>
 </html>

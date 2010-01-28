@@ -15,158 +15,145 @@
  * 	$(function() {
  * 		validation.init({
  * 			form_selector: "#demo-form",
- * 			form_fields: [
- * 				{ input_selector: "#name", test_type: "is_empty" },
- * 				{ input_selector: "#email", test_type: "is_email" },
- * 				{ input_selector: "#comment", test_type: "is_empty" }
+ * 			fields: [
+ * 				{ id: "#name", test: "is_empty" },
+ * 				{ id: "#email", test: "is_email" },
+ * 				{ id: "#comment", test: "is_empty" }
  * 			]
  * 		});
  * 	});
  * 	</script>
  *
  */
-var validation = function() {
-
-	return {
-		
-		defaults: {
+(function($) {
+	$.fn.validation = function(options) {
+	
+		var o = $.extend({
 			error_arr: [],
 			error_display_type: 'inline',
+			top_error_div_id: 'top-error-container',
+			form_error_id: 'form-error',
 			inline_error_class: 'error-msg',
 			description_class: 'input-desc',
-			form_fields: [],
-			error_top_inline_msg: '<p>Please correct the errors below.</p>',
 			error_msgs_pos: 'top',
 			scrollto: false,
 			submit_btn: false,
-			top_error_div_id: 'top-error-container',
-			form_error_id: 'form-error',
+			fields: [],
+			error_top_inline_msg: '<p>Please correct the errors below.</p>',
 			callback: false,
 			default_errors: {
 				'is_empty': 'This field is required.',
 				'is_email': 'Enter a valid e-mail address.',
 				'is_multipe_choice_empty': 'Please select one of the following.'
 			}
-		},
+		}, options);
 
-		init: function(options) {
-			
-			// set options
-			if (typeof options === 'undefined' && typeof this.settings === 'object') {
-				var options = this.settings;
-			}
-			
-			this.o = $.extend(this.defaults, options);
-			
-			$(this.o.form_selector).submit(function() {
-				
-				var o = validation.o;
-				if (o.submit_btn !== false) {
-					$(o.submit_btn).attr("disabled", "disabled");
-					$(o.submit_btn).val("Please Wait...");
-				}
-				
-				validation.check_form();
-			
-				if (validation.error_arr.length === 0) {
-					if (validation.o.callback === false) {
-						$(validation.o.form_selector).unbind("submit").trigger('submit');
-					} else {
-						return validation.o.callback();
-					}
-				} else {
-				
-					validation.display_errors();
-					return false;
-				
-				}
-				
-			 });
-
-		},
+		function init(forms) {
+			return forms.each(function() {
+				var form = $(this);
+				o.form = form;
+				form.submit(function() {
 		
-		is_empty: function(text_str) {
+					if (o.submit_btn !== false) {
+						$(o.submit_btn).attr("disabled", "disabled");
+						$(o.submit_btn).val("Please Wait...");
+					}
+		
+					check_form();
+	
+					if (error_arr.length === 0) {
+						if (o.callback === false) {
+							$(o.form_selector).unbind("submit").trigger('submit');
+						} else {
+							return o.callback();
+						}
+					} else {
+						display_errors();
+						return false;
+					}
+				});
+
+			});
+		}
+
+		function is_empty(text_str) {
 			if (text_str === "" || typeof text_str === "undefined") {
 				return false;
 			}
 			return true;
-		},
-		
-		is_multipe_choice_empty: function(item) {
+		}
+
+		function is_multipe_choice_empty(item) {
 			var ret_val    = false;
-			var input_name = item.input_selector.substring(1);
+			var input_name = item.id.substring(1);
 			$('input[name='+input_name+']').each(function() {
 				if ($(this).attr('checked') === true || $(this).attr('selected') === true) {
 					ret_val = true;
 				}
 			});
 			return ret_val;
-		},
-		
-		is_bool: function(text_str) {
+		}
 
+		function is_bool(text_str) {
 			if (typeof text_str === "undefined") return false;
-			
 			if (text_str != "1" && text_str != "0") {
 				return false;
 			}
 			return true;
-		},
-		
-		is_empty_with_if_fields: function(item) {
-			
-			validation.is_empty_with_if_fields.result = true;
+		}
+
+		function is_empty_with_if_fields(item) {
+			is_empty_with_if_fields.result = true;
 			$.each(item.if_empty_fields, function(key, val) {
-				result = validation.is_empty($(val).val());
+				result = is_empty($(val).val());
 				if (result == false) {
-					result2 = validation.is_empty($(item.input_selector).val());
+					result2 = is_empty($(item.id).val());
 					if (result2 == false) {
-						validation.is_empty_with_if_fields.result = false;
+						is_empty_with_if_fields.result = false;
 						return false;
 					}
-					
 				}
 			});
-			return validation.is_empty_with_if_fields.result;
-		},
-		
-		is_email: function(text_str) {
+			return is_empty_with_if_fields.result;
+		}
+
+		function is_email(text_str) {
 			pattern = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 			if (typeof text_str === "undefined" || pattern.test(text_str) === false) {
 				return false;
 			}
 			return true;
-		},
-		
-		is_same: function(text_str, text2_str) {
+		}
+
+		function is_same(text_str, text2_str) {
 			if (typeof text_str === "undefined" || typeof text2_str === "undefined" || text_str !== text2_str) {
 				return false;
 			}
 			return true;
-		},	
-		
-		is_password_valid: function(password, index, options) {
-			
+		}
+
+		function is_password_valid(password, index, options) {
+	
 			min_length               = (typeof options === "undefined" || typeof options['min_length'] === "undefined") ? 6 : options['min_length'];
 			invalid_chars            = (typeof options === "undefined" || typeof options['invalid_chars'] === "undefined") ? "\\s" : options['invalid_chars'];
 			required_chars           = (typeof options === "undefined" || typeof options['required_chars'] === "undefined") ? false : options['required_chars'];
 			min_length_error_msg     = (typeof options === "undefined" || typeof options['min_length_error_msg'] === "undefined") ? 'Please enter a longer password.  Your password needs to be at least '+ min_length +' characters in length' : options['min_length_error_msg'];
 			invalid_chars_error_msg  = (typeof options === "undefined" || typeof options['invalid_chars_error_msg'] === "undefined") ? 'The password you entered has invalid characters like spaces.' : options['invalid_chars_error_msg'];
 			required_chars_error_msg = (typeof options === "undefined" || typeof options['required_chars_error_msg'] === "undefined") ? 'The password you entered is missing required characters.' : options['required_chars_error_msg'];
-	
+
 			// check password length
 			if (password.length < min_length) {
-				validation.settings.form_fields[index].error_msg = min_length_error_msg;
+				settings.fields[index].error_msg = min_length_error_msg;
 				return false;
 			}
-			
+	
 			// check for invalid characters
 			pattern   = new RegExp(invalid_chars);
 			if (pattern.test(password) == true) {
-				validation.settings.form_fields[index].error_msg = invalid_chars_error_msg;
+				settings.fields[index].error_msg = invalid_chars_error_msg;
 				return false;
 			}
-			
+	
 			// check for required characters
 			if (required_chars !== false) {
 				has_required_chars = true;
@@ -174,106 +161,99 @@ var validation = function() {
 					pattern   = new RegExp(val);
 					if (pattern.test(password) === false) {
 						has_required_chars = false;
-						validation.settings.form_fields[index].error_msg = required_chars_error_msg;
+						settings.fields[index].error_msg = required_chars_error_msg;
 						return false;
 					}
 				});
 				return has_required_chars;
 			}
 			return true;
-		
-		},
-	
-		add_alt_attr: function() {
-			var self = this;
-			form_fields = $(this.o.form_selector + " [alt]");
-			$.each(form_fields, function(index, elem) {
+		}
+
+		function add_alt_attr() {
+			fields = $(o.form).find("[alt]");
+			$.each(fields, function(index, elem) {
 				elem = $(elem);
 				if(elem.val() == "") {
 					elem.val(elem.attr('alt'));
-					elem.addClass("class", self.o.description_class);
+					elem.addClass("class", o.description_class);
 				}
 			});
-		},
-	
-		clear_alt_attr: function() {
-			var self = this;
-			form_fields = $(this.o.form_selector + " [alt]");
-			$.each(form_fields, function(index, elem) {
+		}
+
+		function clear_alt_attr() {
+			fields = $(o.form).find("[alt]");
+			$.each(fields, function(index, elem) {
 				elem = $(elem);
 				if(elem.val() === elem.attr("alt")) {
 					elem.val('');
-					elem.removeClass("class", self.o.description_class);
+					elem.removeClass("class", o.description_class);
 				}
 			});
-		},
+		}
+
+		function add_error(field_key, error_msg) {
+			error_arr[field_key] = error_msg;
+		}
+
+		function check_form() {
+
+			clear_alt_attr();
+			error_arr = [];
+
+			$.each(o.fields, function(index, item) {
 		
-		add_error: function(field_key, error_msg) {
-
-			this.error_arr[field_key] = error_msg;
-
-		},
-
-		check_form: function() {
-
-			this.clear_alt_attr();
-			this.error_arr = [];
-
-			$.each(this.o.form_fields, function(index, item) {
-				
 				test_found     = false;
-				input_id_value = $(item.input_selector).val();
+				input_id_value = $('#'+item.id).val();
 
 				// check for special test types first
-				switch(item.test_type) {
+				switch(item.test) {
 					case "is_empty":
 						if (typeof item.if_empty_fields !== "undefined") {
 							test_found = true;
-							result = validation.is_empty_with_if_fields(item);
+							result = is_empty_with_if_fields(item);
 						}
 					break;
 					case "is_multipe_choice_empty":
 						test_found = true;
-						result = validation.is_multipe_choice_empty(item);
+						result = is_multipe_choice_empty(item);
 					break;
 					case "is_same":
 						test_found      = true;
-						input_id_value2 = $(item.input_selector+'-2').attr("value");
-						result          = validation.is_same(input_id_value, input_id_value2);
+						input_id_value2 = $(item.id+'-2').attr("value");
+						result          = is_same(input_id_value, input_id_value2);
 					break;
 					case "is_password_valid":
 						test_found = true;
 						options    = (typeof item.options !== "undefined") ? item.options : null;
-						result     = validation.is_password_valid(input_id_value, index, options);
+						result     = is_password_valid(input_id_value, index, options);
 					break;
 				}
 
 				// run normal tests if it wasn't a special kind of test
-				if (typeof eval("validation."+item.test_type) == "function" && test_found == false) {
-					result = eval("validation."+item.test_type+"(\""+escape(input_id_value)+"\")");
+				if (typeof eval(item.test) == "function" && test_found == false) {
+					result = eval(item.test+"(\""+escape(input_id_value)+"\")");
 				}
-				
+		
 				if (typeof result !== "undefined" && result === false) {
 					if (typeof item.error_msg === "undefined") {
-						if (typeof validation.o.default_errors[item.test_type] === "undefined") {
-							item.error_msg = validation.o.default_errors['is_empty'];
+						if (typeof o.default_errors[item.test] === "undefined") {
+							item.error_msg = o.default_errors['is_empty'];
 						} else {
-							item.error_msg = validation.o.default_errors[item.test_type];
+							item.error_msg = o.default_errors[item.test];
 						}
 					}
-					validation.add_error(index, item.error_msg);
+					add_error(index, item.error_msg);
 				}
 
 			});
 			return false;
-		},
+		}
 
-		display_inline_errors: function() {
+		function display_inline_errors() {
 
-			var o     = this.o;
-			var fields    = o.form_fields;
-			var error_arr = this.error_arr;
-			
+			var fields    = o.fields;
+	
 			// add top error message
 			if ($("#"+o.top_error_div_id).length === 0) {
 				$(o.form_selector).prepend('<div>');
@@ -281,22 +261,22 @@ var validation = function() {
 			}
 
 			// remove previous error messages
-			$('.'+validation.o.inline_error_class).each(function() {
+			$('.'+o.inline_error_class).each(function() {
 				$(this).parent().removeClass('error');
 				$(this).remove();
 			});
-			
+	
 			// add new error messages
 			$.each(fields, function(key, field) {
 
-				var selector = field.input_selector;
-				if (field.test_type === "is_multipe_choice_empty") {
+				var selector = '#'+field.id;
+				if (field.test === "is_multipe_choice_empty") {
 					selector = '#'+$('input[name='+selector.substring(1)+']:first').attr('id');
 				}
-				
+		
 				if (typeof error_arr[key] !== "undefined") {
-					
-					if (field.test_type === "is_multipe_choice_empty" && (typeof $(selector).parent()[0] !== 'undefined' && $(selector).parent()[0].tagName.toLowerCase() === "label")) {
+			
+					if (field.test === "is_multipe_choice_empty" && (typeof $(selector).parent()[0] !== 'undefined' && $(selector).parent()[0].tagName.toLowerCase() === "label")) {
 						var parent = $(selector).parent().parents('ul');
 						var parent_tag = 'div';
 					} else if (typeof $(selector).parent().prev()[0] !== "undefined" && $(selector).parent().prev()[0].tagName.toLowerCase() === 'dt') {
@@ -306,7 +286,7 @@ var validation = function() {
 						var parent     = $(selector).parent();
 						var parent_tag = parent[0].tagName.toLowerCase();
 					}
-					error_msg = '<'+parent_tag+' class="'+validation.o.inline_error_class+'">'+field.error_msg+'</'+parent_tag+">\n";
+					error_msg = '<'+parent_tag+' class="'+o.inline_error_class+'">'+field.error_msg+'</'+parent_tag+">\n";
 					if (o.error_msgs_pos === 'top') {
 						parent.before(error_msg);
 					} else {
@@ -316,28 +296,28 @@ var validation = function() {
 				}
 
 			});
-			
-			$('.'+validation.o.inline_error_class).each(function() {
-				if ($(this).next().hasClass(validation.o.inline_error_class)) {
+	
+			$('.'+o.inline_error_class).each(function() {
+				if ($(this).next().hasClass(o.inline_error_class)) {
 					$(this).next().remove();
 				}
 			});
-			
+	
 			// re-enable submit button
 			if (typeof o.submit_btn !== "undefined" && o.submit_btn_value !== "undefined") {
 				$(o.submit_btn).val(o.submit_btn_value);
 				$(o.submit_btn).removeAttr("disabled");
 			}
-			
+	
 			// scroll to location
 			if (o.scrollto !== false) {
 				o.scrollto();
 			}
 
-		},
+		}
 
-		display_top_errors: function() {
-		
+		function display_top_errors() {
+
 			// make array unique
 			Array.prototype.getUnique = function () {
 				var o = new Object();
@@ -349,41 +329,41 @@ var validation = function() {
 				for (e in o) {a.push (e);};
 				return a;
 			};
-			
-			this.error_arr = this.error_arr.getUnique();
+	
+			error_arr = error_arr.getUnique();
 
-			this.add_alt_attr();
+			add_alt_attr();
 			window.scroll(0,0);
 			html_error = "\t<p>The operation could not be performed because one or more error(s) occurred.  Please resubmit the form after making the following changes:</p>"+
 						 "\t<ul>\n";
-			$.each(this.error_arr, function(index, error) {
+			$.each(error_arr, function(index, error) {
 				html_error += "\t\t<li>"+error+"</li>\n";
 			});
-			html_error = '<div id="'+this.o.form_error_id+'">'+html_error+"\t</ul>\n</div>";
-			if ($('#'+this.o.form_error_id).length > 0) {
-				$('#'+this.o.form_error_id).remove();
+			html_error = '<div id="'+o.form_error_id+'">'+html_error+"\t</ul>\n</div>";
+			if ($('#'+o.form_error_id).length > 0) {
+				$('#'+o.form_error_id).remove();
 			}
-			$(this.o.form_selector).prepend(html_error);
-			$('#'+this.o.form_error_id).hide();
-			$('#'+this.o.form_error_id).fadeIn("slow");
-			if (typeof this.o.submit_btn !== "undefined" && typeof this.o.submit_btn_value !== "undefined") {
-				$(this.o.submit_btn).val(this.o.submit_btn_value);
-				$(this.o.submit_btn).removeAttr("disabled");
+			$(o.form_selector).prepend(html_error);
+			$('#'+o.form_error_id).hide();
+			$('#'+o.form_error_id).fadeIn("slow");
+			if (typeof o.submit_btn !== "undefined" && typeof o.submit_btn_value !== "undefined") {
+				$(o.submit_btn).val(o.submit_btn_value);
+				$(o.submit_btn).removeAttr("disabled");
 			}
-		
-		},
-		
-		
-		display_errors: function() {
-			
-			this.add_alt_attr();
-			if (this.o.error_display_type == 'inline') {
-				this.display_inline_errors();
-			} else if (this.o.error_display_type == 'top') {
-				this.display_top_errors();
+
+		}
+
+		function display_errors() {
+	
+			add_alt_attr();
+			if (o.error_display_type == 'inline') {
+				display_inline_errors();
+			} else if (o.error_display_type == 'top') {
+				display_top_errors();
 			}
 			return false;
 		}
-	
-	};
-}();
+
+		return init(this);
+	}
+})(jQuery);

@@ -5,7 +5,7 @@
  *
  * Dual licensed under the MIT and GPL licenses.
  */
-(function($) {	
+(function($) {
 
 	$.fn.external_links = function(options) {
 		
