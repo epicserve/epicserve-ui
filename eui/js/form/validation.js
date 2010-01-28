@@ -61,7 +61,8 @@
 		
 					check_form();
 	
-					if (error_arr.length === 0) {
+					if (o.error_arr.length === 0) {
+						remove_errors();
 						if (o.callback === false) {
 							$(o.form_selector).unbind("submit").trigger('submit');
 						} else {
@@ -75,101 +76,15 @@
 
 			});
 		}
-
-		function is_empty(text_str) {
-			if (text_str === "" || typeof text_str === "undefined") {
-				return false;
-			}
-			return true;
-		}
-
-		function is_multipe_choice_empty(item) {
-			var ret_val    = false;
-			var input_name = item.id.substring(1);
-			$('input[name='+input_name+']').each(function() {
-				if ($(this).attr('checked') === true || $(this).attr('selected') === true) {
-					ret_val = true;
-				}
+		
+		function remove_errors() {
+			$('.'+o.inline_error_class).each(function() {
+				$(this).parent().removeClass('error');
+				$(this).remove();
 			});
-			return ret_val;
 		}
-
-		function is_bool(text_str) {
-			if (typeof text_str === "undefined") return false;
-			if (text_str != "1" && text_str != "0") {
-				return false;
-			}
-			return true;
-		}
-
-		function is_empty_with_if_fields(item) {
-			is_empty_with_if_fields.result = true;
-			$.each(item.if_empty_fields, function(key, val) {
-				result = is_empty($(val).val());
-				if (result == false) {
-					result2 = is_empty($(item.id).val());
-					if (result2 == false) {
-						is_empty_with_if_fields.result = false;
-						return false;
-					}
-				}
-			});
-			return is_empty_with_if_fields.result;
-		}
-
-		function is_email(text_str) {
-			pattern = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-			if (typeof text_str === "undefined" || pattern.test(text_str) === false) {
-				return false;
-			}
-			return true;
-		}
-
-		function is_same(text_str, text2_str) {
-			if (typeof text_str === "undefined" || typeof text2_str === "undefined" || text_str !== text2_str) {
-				return false;
-			}
-			return true;
-		}
-
-		function is_password_valid(password, index, options) {
-	
-			min_length               = (typeof options === "undefined" || typeof options['min_length'] === "undefined") ? 6 : options['min_length'];
-			invalid_chars            = (typeof options === "undefined" || typeof options['invalid_chars'] === "undefined") ? "\\s" : options['invalid_chars'];
-			required_chars           = (typeof options === "undefined" || typeof options['required_chars'] === "undefined") ? false : options['required_chars'];
-			min_length_error_msg     = (typeof options === "undefined" || typeof options['min_length_error_msg'] === "undefined") ? 'Please enter a longer password.  Your password needs to be at least '+ min_length +' characters in length' : options['min_length_error_msg'];
-			invalid_chars_error_msg  = (typeof options === "undefined" || typeof options['invalid_chars_error_msg'] === "undefined") ? 'The password you entered has invalid characters like spaces.' : options['invalid_chars_error_msg'];
-			required_chars_error_msg = (typeof options === "undefined" || typeof options['required_chars_error_msg'] === "undefined") ? 'The password you entered is missing required characters.' : options['required_chars_error_msg'];
-
-			// check password length
-			if (password.length < min_length) {
-				settings.fields[index].error_msg = min_length_error_msg;
-				return false;
-			}
-	
-			// check for invalid characters
-			pattern   = new RegExp(invalid_chars);
-			if (pattern.test(password) == true) {
-				settings.fields[index].error_msg = invalid_chars_error_msg;
-				return false;
-			}
-	
-			// check for required characters
-			if (required_chars !== false) {
-				has_required_chars = true;
-				$.each(required_chars, function(key, val) {
-					pattern   = new RegExp(val);
-					if (pattern.test(password) === false) {
-						has_required_chars = false;
-						settings.fields[index].error_msg = required_chars_error_msg;
-						return false;
-					}
-				});
-				return has_required_chars;
-			}
-			return true;
-		}
-
+		
+		
 		function add_alt_attr() {
 			fields = $(o.form).find("[alt]");
 			$.each(fields, function(index, elem) {
@@ -193,46 +108,47 @@
 		}
 
 		function add_error(field_key, error_msg) {
-			error_arr[field_key] = error_msg;
+			o.error_arr[field_key] = error_msg;
 		}
 
 		function check_form() {
-
+			
+			o.error_arr = [];
+			var test = $.fn.validation.test;
 			clear_alt_attr();
-			error_arr = [];
 
 			$.each(o.fields, function(index, item) {
 		
-				test_found     = false;
-				input_id_value = $('#'+item.id).val();
+				var test_found     = false;
+				var input_id_value = $('#'+item.id).val();
 
 				// check for special test types first
 				switch(item.test) {
 					case "is_empty":
 						if (typeof item.if_empty_fields !== "undefined") {
 							test_found = true;
-							result = is_empty_with_if_fields(item);
+							result = test.is_empty_with_if_fields(item);
 						}
 					break;
 					case "is_multipe_choice_empty":
 						test_found = true;
-						result = is_multipe_choice_empty(item);
+						result = test.is_multipe_choice_empty(item);
 					break;
 					case "is_same":
 						test_found      = true;
 						input_id_value2 = $(item.id+'-2').attr("value");
-						result          = is_same(input_id_value, input_id_value2);
+						result          = test.is_same(input_id_value, input_id_value2);
 					break;
 					case "is_password_valid":
 						test_found = true;
 						options    = (typeof item.options !== "undefined") ? item.options : null;
-						result     = is_password_valid(input_id_value, index, options);
+						result     = test.is_password_valid(input_id_value, index, options);
 					break;
 				}
 
 				// run normal tests if it wasn't a special kind of test
-				if (typeof eval(item.test) == "function" && test_found == false) {
-					result = eval(item.test+"(\""+escape(input_id_value)+"\")");
+				if (typeof eval('test.'+item.test) == "function" && test_found == false) {
+					result = eval('test.'+item.test+"(\""+escape(input_id_value)+"\")");
 				}
 		
 				if (typeof result !== "undefined" && result === false) {
@@ -261,10 +177,7 @@
 			}
 
 			// remove previous error messages
-			$('.'+o.inline_error_class).each(function() {
-				$(this).parent().removeClass('error');
-				$(this).remove();
-			});
+			remove_errors();
 	
 			// add new error messages
 			$.each(fields, function(key, field) {
@@ -274,7 +187,7 @@
 					selector = '#'+$('input[name='+selector.substring(1)+']:first').attr('id');
 				}
 		
-				if (typeof error_arr[key] !== "undefined") {
+				if (typeof o.error_arr[key] !== "undefined") {
 			
 					if (field.test === "is_multipe_choice_empty" && (typeof $(selector).parent()[0] !== 'undefined' && $(selector).parent()[0].tagName.toLowerCase() === "label")) {
 						var parent = $(selector).parent().parents('ul');
@@ -365,5 +278,103 @@
 		}
 
 		return init(this);
+	}
+	
+	$.fn.validation.test = {
+		
+		is_empty: function(text_str) {
+			if (text_str === "" || typeof text_str === "undefined") {
+				return false;
+			}
+			return true;
+		},
+
+		is_multipe_choice_empty: function(item) {
+			var ret_val    = false;
+			var input_name = item.id.substring(1);
+			$('input[name='+input_name+']').each(function() {
+				if ($(this).attr('checked') === true || $(this).attr('selected') === true) {
+					ret_val = true;
+				}
+			});
+			return ret_val;
+		},
+
+		is_bool: function(text_str) {
+			if (typeof text_str === "undefined") return false;
+			if (text_str != "1" && text_str != "0") {
+				return false;
+			}
+			return true;
+		},
+
+		is_empty_with_if_fields: function(item) {
+			is_empty_with_if_fields.result = true;
+			$.each(item.if_empty_fields, function(key, val) {
+				result = is_empty($(val).val());
+				if (result == false) {
+					result2 = is_empty($(item.id).val());
+					if (result2 == false) {
+						is_empty_with_if_fields.result = false;
+						return false;
+					}
+				}
+			});
+			return is_empty_with_if_fields.result;
+		},
+
+		is_email: function(text_str) {
+			pattern = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			if (typeof text_str === "undefined" || pattern.test(text_str) === false) {
+				return false;
+			}
+			return true;
+		},
+
+		is_same: function(text_str, text2_str) {
+			if (typeof text_str === "undefined" || typeof text2_str === "undefined" || text_str !== text2_str) {
+				return false;
+			}
+			return true;
+		},
+
+		is_password_valid: function(password, index, options) {
+	
+			min_length               = (typeof options === "undefined" || typeof options['min_length'] === "undefined") ? 6 : options['min_length'];
+			invalid_chars            = (typeof options === "undefined" || typeof options['invalid_chars'] === "undefined") ? "\\s" : options['invalid_chars'];
+			required_chars           = (typeof options === "undefined" || typeof options['required_chars'] === "undefined") ? false : options['required_chars'];
+			min_length_error_msg     = (typeof options === "undefined" || typeof options['min_length_error_msg'] === "undefined") ? 'Please enter a longer password.  Your password needs to be at least '+ min_length +' characters in length' : options['min_length_error_msg'];
+			invalid_chars_error_msg  = (typeof options === "undefined" || typeof options['invalid_chars_error_msg'] === "undefined") ? 'The password you entered has invalid characters like spaces.' : options['invalid_chars_error_msg'];
+			required_chars_error_msg = (typeof options === "undefined" || typeof options['required_chars_error_msg'] === "undefined") ? 'The password you entered is missing required characters.' : options['required_chars_error_msg'];
+
+			// check password length
+			if (password.length < min_length) {
+				settings.fields[index].error_msg = min_length_error_msg;
+				return false;
+			}
+	
+			// check for invalid characters
+			pattern   = new RegExp(invalid_chars);
+			if (pattern.test(password) == true) {
+				settings.fields[index].error_msg = invalid_chars_error_msg;
+				return false;
+			}
+	
+			// check for required characters
+			if (required_chars !== false) {
+				has_required_chars = true;
+				$.each(required_chars, function(key, val) {
+					pattern   = new RegExp(val);
+					if (pattern.test(password) === false) {
+						has_required_chars = false;
+						settings.fields[index].error_msg = required_chars_error_msg;
+						return false;
+					}
+				});
+				return has_required_chars;
+			}
+			return true;
+		}
+
 	}
 })(jQuery);
