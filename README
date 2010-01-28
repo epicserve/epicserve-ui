@@ -2,6 +2,6 @@
 Epicserve User Interface
 ========================
 
-This is a collection of all the CSS and Javascript that Brent O'Connor of Epicserve has either authored or uses in most of his projects. Documentation is limited to whatever is inside the source javascript or CSS file.
+This is a collection of CSS and Javascript files that Brent O'Connor of Epicserve (http://www.epicserve.com) has either authored or uses in his projects. This collection will hopefully help others to mockup or prototype websites more quickly.
 
-Hopefully, when I have more time I'll be able to add a Docs directory which will contain better documentation.
+Documentation is currently limited to whatever is inside the source javascript or CSS files. I've made one quick start guide and demo for my form validation and description javascript files, which is located in the docs directory. Bug reports and fixes, along with suggestions for improvements are welcome.
