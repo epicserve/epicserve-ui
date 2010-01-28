@@ -3,27 +3,27 @@
  * Copyright (c) 2010 Brent O'Connor
  * http://www.epicserve.com/
  * 
- * Version: 1.2
+ * Version: 1.3
+ * @requires jQuery v1.2.3 or later
  *
  * Dual licensed under the MIT and GPL licenses.
  * 
  * Example Usage:
- * 
- * 	<script src="../eui/js/jquery/jquery-1.4.min.js" type="text/javascript" charset="utf-8"></script>
- * 	<script src="../eui/js/form/validation.js" type="text/javascript" charset="utf-8"></script>
- * 	<script type="text/javascript" charset="utf-8">
- * 	$(function() {
- * 		validation.init({
- * 			form_selector: "#demo-form",
- * 			fields: [
- * 				{ id: "#name", test: "is_empty" },
- * 				{ id: "#email", test: "is_email" },
- * 				{ id: "#comment", test: "is_empty" }
- * 			]
- * 		});
- * 	});
- * 	</script>
- *
+
+	<script src="../eui/js/jquery/jquery-1.4.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../eui/js/form/validation.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+	$(function() {
+		$('#my-form-id').validation({
+			fields: [
+				{ id: "name", test: "is_empty" },
+				{ id: "email", test: "is_email" },
+				{ id: "comment", test: "is_empty" }
+			]
+		});
+	});
+	</script>
+	
  */
 (function($) {
 	$.fn.validation = function(options) {
@@ -64,7 +64,7 @@
 					if (o.error_arr.length === 0) {
 						remove_errors();
 						if (o.callback === false) {
-							$(o.form_selector).unbind("submit").trigger('submit');
+							o.form.unbind("submit").trigger('submit');
 						} else {
 							return o.callback();
 						}
@@ -172,8 +172,8 @@
 	
 			// add top error message
 			if ($("#"+o.top_error_div_id).length === 0) {
-				$(o.form_selector).prepend('<div>');
-				$(o.form_selector).find('div:first').attr('id', o.top_error_div_id).html(o.error_top_inline_msg);
+				o.form.prepend('<div>');
+				o.form.find('div:first').attr('id', o.top_error_div_id).html(o.error_top_inline_msg);
 			}
 
 			// remove previous error messages
@@ -256,7 +256,7 @@
 			if ($('#'+o.form_error_id).length > 0) {
 				$('#'+o.form_error_id).remove();
 			}
-			$(o.form_selector).prepend(html_error);
+			o.form.prepend(html_error);
 			$('#'+o.form_error_id).hide();
 			$('#'+o.form_error_id).fadeIn("slow");
 			if (typeof o.submit_btn !== "undefined" && typeof o.submit_btn_value !== "undefined") {

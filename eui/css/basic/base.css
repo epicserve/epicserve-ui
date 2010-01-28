@@ -15,6 +15,15 @@ a {
 a:hover {
 	color: #999;
 }
+h1 {
+	font-size: 1.75em;	
+}
+h2 {
+	font-size: 1.5em;
+}
+h3 {
+	font-size: 1em;
+}
 
 
 /**
@@ -46,7 +55,7 @@ footer.bottom p {
  * HEADER
  * ------------------------------------------------------------------------ */
 header h1 {
-	font-size: 18px;
+	font-size: 1.75em;
 	color: #333;
 	background: #ccc;
 	margin: 0;
