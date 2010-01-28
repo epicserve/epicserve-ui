@@ -40,6 +40,7 @@
 			submit_btn: false,
 			fields: [],
 			error_top_inline_msg: '<p>Please correct the errors below.</p>',
+			display_top_inline_error_msg: false,
 			callback: false,
 			default_errors: {
 				'is_empty': 'This field is required.',
@@ -171,7 +172,7 @@
 			var fields    = o.fields;
 	
 			// add top error message
-			if ($("#"+o.top_error_div_id).length === 0) {
+			if ($("#"+o.top_error_div_id).length === 0 && o.display_top_inline_error_msg === true) {
 				o.form.prepend('<div>');
 				o.form.find('div:first').attr('id', o.top_error_div_id).html(o.error_top_inline_msg);
 			}
