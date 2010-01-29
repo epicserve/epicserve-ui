@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Ticker Documentation and Demo - Epicserve-ui</title>
+	<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]--> 
+	<!--[if lt IE 8]><script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE8.js" type="text/javascript"></script><![endif]-->
+	<script src="../eui/js/jquery/jquery-1.4.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../eui/js/ui/jquery.ticker.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+		$(function(){
+			$('#my-ticker').ticker();
+		});
+	</script>
+	<link rel="stylesheet" href="../eui/css/basic/base.css" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="../eui/css/basic/form.css" type="text/css" media="screen" charset="utf-8">
+	<style type="text/css" media="screen">
+		.ticker-container, .ticker-container > .mask {
+			position: relative;
+			width: 500px;
+			height: 60px;
+			padding: 0px;
+			margin: 0px;
+			background: #1B2426;
+		}
+		.ticker-container .mask {
+			display: block;
+			overflow: hidden;
+		}
+		#my-ticker li {
+			display: block;
+			position: relative;
+			float: left;
+			overflow: visible;
+			white-space: nowrap;
+			line-height: 20px;
+			font-size: 20px;
+			margin: 0;
+			padding: 20px 20px 20px 0;
+			color: #fff;
+		}
+	</style>
+	<!-- Javascript and CSS required for the code syntax highlighter -->
+	<script src="../eui/js/code/syntaxhighlighter/src/shCore.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../eui/js/code/syntaxhighlighter/scripts/shCore.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../eui/js/code/syntaxhighlighter/scripts/shBrushXml.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../eui/js/code/syntaxhighlighter/scripts/shBrushJScript.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../eui/js/code/syntaxhighlighter/scripts/shBrushCss.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="../eui/js/code/syntaxhighlighter/styles/shCore.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="../eui/js/code/syntaxhighlighter/styles/shThemeRDark.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script type="text/javascript">
+		SyntaxHighlighter.defaults.gutter = false;
+		SyntaxHighlighter.all();
+	</script></head>
+	<style type="text/css" media="screen">
+		.syntaxhighlighter {
+			padding: 10px !important;
+		}
+	</style>
+
+<body class="one-col">
+	<div id="page-container" class="container_12">
+	<div class="grid_12">
+
+	<header class="master">
+		<h1>Ticker Documentation and Demo</h1>
+	</header>
+
+	<section>
+		
+		<h2>Ticker Documentation</h2>
+		
+		<p>First add your ticker markup to your HTML document.</p>
+		
+		<pre class="brush: xml">&lt;body&gt;
+...
+&lt;ul id=&quot;my-ticker&quot;&gt;
+	&lt;li&gt;Example ticker for Epicserve-ui...&lt;/li&gt;
+	&lt;li&gt;Cras at nibh hendrerit erat mollis commodo sit amet ac est.&lt;/li&gt;
+	&lt;li&gt;Nullam consectetur imperdiet mauris, non lacinia orci feugiat at.&lt;/li&gt;
+	&lt;li&gt;Pellentesque porttitor tincidunt quam, eget porttitor risus varius ac.&lt;/li&gt;
+	&lt;li&gt;Pellentesque viverra dui id dui faucibus viverra.&lt;/li&gt;
+&lt;/ul&gt;
+...
+&lt;/body&gt;
+</pre>
+
+		<p>Next you need to style your ticker.</p>
+		
+		<pre class="brush: css">&lt;head&gt;
+	...
+	&lt;style type=&quot;text/css&quot; media=&quot;screen&quot;&gt;
+		.ticker-container, .ticker-container &gt; .mask {
+			position: relative;
+			width: 500px;
+			height: 60px;
+			padding: 0px;
+			margin: 0px;
+			background: #1B2426;
+		}
+		.ticker-container .mask {
+			display: block;
+			overflow: hidden;
+		}
+		#my-ticker li {
+			display: block;
+			position: relative;
+			float: left;
+			overflow: visible;
+			white-space: nowrap;
+			line-height: 20px;
+			font-size: 20px;
+			margin: 0;
+			padding: 20px 20px 20px 0;
+			color: #fff;
+		}
+	&lt;/style&gt;
+	...
+&lt;/head&gt;</pre>
+
+		<p>Finally include the required javascript libraries and start your ticker.</p>
+
+<pre class="brush: js">&lt;head&gt;
+	...
+	&lt;script src=&quot;../eui/js/jquery/jquery-1.4.min.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+	&lt;script src=&quot;../eui/js/ui/jquery.ticker.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+	&lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;
+		$(function(){
+			$(&#x27;#my-ticker&#x27;).ticker();
+		});
+	&lt;/script&gt;
+	...
+&lt;/head&gt;</pre>
+		
+		
+		<h2>Ticker Demo</h2>
+		
+		<ul id="my-ticker">
+			<li>Example ticker for Epicserve-ui...</li>
+			<li>Cras at nibh hendrerit erat mollis commodo sit amet ac est.</li>
+			<li>Nullam consectetur imperdiet mauris, non lacinia orci feugiat at.</li>
+			<li>Pellentesque porttitor tincidunt quam, eget porttitor risus varius ac.</li>
+			<li>Pellentesque viverra dui id dui faucibus viverra.</li>
+		</ul>
+		
+		<div style="clear:both;">&nbsp;</div>
+		
+	</section>
+	</div>
+	<div class="push"></div>
+	</div>
+	
+	<footer class="bottom container_12">
+		<div class="grid_12"><p class="">Copyright 2010 Brent O'Connor</p></div>
+	</footer>
+
+	
+</body>
+</html>
