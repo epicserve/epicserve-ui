@@ -9,8 +9,6 @@
  */
 (function($) {
 
-	var $$ = $.fn.class_fader;
-	
 	$.fn.class_fader = function(options) {
 		
 		var self = $.fn.class_fader;
@@ -43,6 +41,8 @@
 		
 		return init(this);
 	};
+
+	var $$ = $.fn.class_fader;
 	
 	$$.add_elem_clone= function(el) {
 		
