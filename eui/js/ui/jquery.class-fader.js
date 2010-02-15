@@ -20,7 +20,8 @@
 			off_fade_speed: 'slow',
 			on_fade_opacity: 1,
 			off_fade_opacity: 1,
-			clone_zindex: 10000
+			clone_zindex: 10000,
+			add_elem_clone_callback: false
 		}, options);
 		
 		function init(elems) {
@@ -52,6 +53,9 @@
 		el_cone = el.parent().children().first();
 		el_cone.css({ position: 'absolute', zIndex: o.clone_zindex });
 		el.css({ position: 'absolute' });
+		
+		if (typeof o.add_elem_clone_callback === 'function') o.add_elem_clone_callback();
+		
 	};
 	
 	$$.remove_add_class = function(el, remove_class, add_class) {
