@@ -1,5 +1,5 @@
 /**
- * epicserve-ui Form Descriptions
+ * epicserve-ui Insert Form Data
  * Copyright (c) 2010 Brent O'Connor
  * http://www.epicserve.com/
  * 
